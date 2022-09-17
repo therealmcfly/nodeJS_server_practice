@@ -1,25 +1,25 @@
-const http = require("http");
+const express = require("express");
+const path = require("path");
 
-const server = http.createServer((req, res) => {
-  const url = req.url;
-  // home page
-  if (url === "/") {
-    res.writeHead(200, { "content-type": "text/html" });
-    res.write("<h1>Welcome to My Home Page!</h1>");
-    res.end();
-  }
-  // about page
-  else if (url === "/about") {
-    res.writeHead(200, { "content-type": "text/html" });
-    res.write("<h1>This is the about page</h1>");
-    res.end();
-  }
-  // 404
-  else {
-    res.writeHead(404, "Invalid Path", { "content-type": "text/html" });
-    res.write("<h1>page not found</h1>");
-    res.end();
-  }
+const app = express();
+
+// const name = path.resolve("index.html");
+// console.log(name);
+
+// app.get("/", (req, res) => {
+//   res.status(200).send("Home Page");
+// });
+
+// app.get("/about", (req, res) => {
+//   res.status(200).send("About Page");
+// });
+
+app.use(express.static("./html"));
+
+app.all("*", (req, res) => {
+  res.status(400).send("<h1>Invalid Path</h1>");
 });
 
-server.listen(5000);
+app.listen(5000, () => {
+  console.log("server is running");
+});
