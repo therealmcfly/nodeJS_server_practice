@@ -1,25 +1,30 @@
 const express = require("express");
-const path = require("path");
-
 const app = express();
 
-// const name = path.resolve("index.html");
-// console.log(name);
+const { products } = require("./public/data");
+const newProducts = products.map((product) => {
+  const { id, name, price } = product;
+  return { id, name, price };
+});
 
-// app.get("/", (req, res) => {
-//   res.status(200).send("Home Page");
-// });
+app.use(express.static("./public"));
 
-// app.get("/about", (req, res) => {
-//   res.status(200).send("About Page");
-// });
+app.get("/api/products", (req, res) => {
+  res.json(newProducts);
+});
 
-app.use(express.static("./html"));
+app.get("/api/products/:productID", (req, res) => {
+  const { productID } = req.params;
+  const singleProduct = newProducts.find(
+    (product) => product.id === Number(productID)
+  );
+  res.json(singleProduct);
+});
 
 app.all("*", (req, res) => {
   res.status(400).send("<h1>Invalid Path</h1>");
 });
 
 app.listen(5000, () => {
-  console.log("server is running");
+  console.log("server is listening on port 5000......");
 });
