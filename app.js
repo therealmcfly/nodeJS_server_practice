@@ -1,13 +1,18 @@
 const express = require("express");
 const app = express();
 
+const logger = require("./logger");
+const authorize = require("./authorize");
+
 const { products } = require("./public/data");
 const newProducts = products.map((product) => {
   const { id, name, price } = product;
   return { id, name, price };
 });
 
-app.use(express.static("./public"));
+app.use([express.static("./public"), logger]);
+
+app.use("/api", authorize);
 
 app.get("/api/products", (req, res) => {
   res.json(newProducts);
@@ -36,7 +41,7 @@ app.get("/api/v1/query", (req, res) => {
     return res.status(200).send("no products match the search value");
     // return res.status(200).json({ success: true, data: [] });
   }
-  res.status(200).json(sortedProducts);
+  return res.status(200).json(sortedProducts);
 });
 
 app.all("*", (req, res) => {
