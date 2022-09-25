@@ -1,35 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-let { products } = require("../public/data");
+const { getProducts, getProduct } = require("../controllers/product");
 
-const newProducts = products.map((product) => {
-  const { id, name, price } = product;
-  return { id, name, price };
-});
+router.get("/", getProducts);
 
-router.get("/", (req, res) => {
-  res.json(newProducts);
-});
-
-router.get("/:productID", (req, res) => {
-  const { productID } = req.params;
-  const singleProduct = newProducts.find(
-    (product) => product.id === Number(productID)
-  );
-  res.json(singleProduct);
-});
-
-router.get("/", (req, res) => {
-  res.json(newProducts);
-});
-
-router.get("/:productID", (req, res) => {
-  const { productID } = req.params;
-  const singleProduct = newProducts.find(
-    (product) => product.id === Number(productID)
-  );
-  res.json(singleProduct);
-});
+router.get("/:productID", getProduct);
 
 module.exports = router;
